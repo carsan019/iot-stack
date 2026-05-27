@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/app.component.scss"],
+  "sourcesContent": [".contenedor {\r\n  max-width: 1400px;\r\n  margin: 0 auto;\r\n  padding: 1.5rem;\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,aAAA;AACA,UAAA,EAAA;AACA,WAAA;;",
+  "names": []
+}

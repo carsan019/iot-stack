@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/grafana-cloud-page.component.ts"],
+  "sourcesContent": ["import { ChangeDetectionStrategy, Component } from '@angular/core';\r\nimport { DashboardComponent } from '../components/dashboard/dashboard.component';\r\n\r\n@Component({\r\n  selector: 'app-grafana-cloud-page',\r\n  standalone: true,\r\n  imports: [DashboardComponent],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  template: `<app-dashboard fuente=\"cloud\"></app-dashboard>`,\r\n})\r\nexport class GrafanaCloudPageComponent {}\r\n"],
+  "mappings": ";;;;;;;;;;;;;AAUM,IAAO,4BAAP,MAAO,2BAAyB;;qCAAzB,4BAAyB;EAAA;yEAAzB,4BAAyB,WAAA,CAAA,CAAA,wBAAA,CAAA,GAAA,OAAA,GAAA,MAAA,GAAA,QAAA,CAAA,CAAA,UAAA,OAAA,CAAA,GAAA,UAAA,SAAA,mCAAA,IAAA,KAAA;AAAA,QAAA,KAAA,GAAA;AAFzB,MAAA,oBAAA,GAAA,iBAAA,CAAA;;oBAFD,kBAAkB,GAAA,eAAA,GAAA,iBAAA,EAAA,CAAA;;;sEAIjB,2BAAyB,CAAA;UAPrC;WAAU;MACT,UAAU;MACV,YAAY;MACZ,SAAS,CAAC,kBAAkB;MAC5B,iBAAiB,wBAAwB;MACzC,UAAU;KACX;;;;6EACY,2BAAyB,EAAA,WAAA,6BAAA,UAAA,iDAAA,YAAA,GAAA,CAAA;AAAA,GAAA;",
+  "names": []
+}

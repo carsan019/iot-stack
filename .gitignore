@@ -3,4 +3,3 @@ mosquitto/log/
 mosquitto/data/
 frontend/node_modules/
 frontend/.angular/
-frontend/dist/proyect-iot/

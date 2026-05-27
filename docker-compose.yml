@@ -56,12 +56,11 @@ services:
         condition: service_started
 
   frontend:
-    image: nginx:alpine
+    build: ./frontend
+    image: imagen-frontend-iot
     container_name: mi-frontend-iot
     ports:
       - "80:80"
-    volumes:
-      - ./frontend/dist:/usr/share/nginx/html:ro
     restart: unless-stopped
     depends_on:
       - api

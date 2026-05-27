@@ -1,0 +1,20 @@
+<article class="panel">
+  <header class="panel__header">
+    <div>
+      <h3 class="panel__titulo">{{ panel.titulo }}</h3>
+      <span class="panel__meta">UID: {{ panel.dashboardUid }} · panelId: {{ panel.panelId }}</span>
+    </div>
+    <button type="button" class="panel__cerrar" (click)="onEliminar()" title="Eliminar panel">
+      ×
+    </button>
+  </header>
+  <div class="panel__cuerpo" [style.height.px]="altura">
+    <iframe
+      [src]="url"
+      frameborder="0"
+      loading="lazy"
+      referrerpolicy="no-referrer"
+      title="Panel Grafana {{ panel.titulo }}"
+    ></iframe>
+  </div>
+</article>

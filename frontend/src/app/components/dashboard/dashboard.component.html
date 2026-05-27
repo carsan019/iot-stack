@@ -1,0 +1,98 @@
+<section class="dashboard">
+  <header class="dashboard__cabecera">
+    <div>
+      <h2 class="dashboard__titulo">{{ config().label }}</h2>
+      <p class="dashboard__descripcion">
+        Base URL:
+        <code>{{ config().baseUrl }}</code>
+      </p>
+    </div>
+    <div class="dashboard__acciones-cabecera">
+      <button class="btn" (click)="mostrarFormConfig.set(!mostrarFormConfig())">
+        <span class="btn__icono" aria-hidden="true">?</span>
+        {{ mostrarFormConfig() ? 'Cerrar' : 'Configurar conexión' }}
+      </button>
+      <button class="btn btn--primario" (click)="mostrarFormPanel.set(!mostrarFormPanel())">
+        {{ mostrarFormPanel() ? 'Cerrar' : '+ Panel Grafana' }}
+      </button>
+      <button class="btn btn--secundario" (click)="mostrarFormBoton.set(!mostrarFormBoton())">
+        {{ mostrarFormBoton() ? 'Cerrar' : '+ Botón de acción' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="aviso" *ngIf="!conexionLista()">
+    <strong>Configurá la conexión a Grafana</strong> para ver los paneles. Pulsá
+    <em>Configurar conexión</em> y pegá tu URL (por ejemplo
+    <code>https://mi-stack.grafana.net</code>). Se guarda en este navegador.
+  </div>
+
+  <div class="dashboard__forms" *ngIf="mostrarFormConfig() || mostrarFormPanel() || mostrarFormBoton()">
+    <app-form-config-grafana
+      *ngIf="mostrarFormConfig()"
+      [fuente]="fuente"
+      (guardado)="onConfigGuardada()"
+      (cancelar)="mostrarFormConfig.set(false)"
+    ></app-form-config-grafana>
+
+    <app-form-panel
+      *ngIf="mostrarFormPanel()"
+      [fuente]="fuente"
+      (guardar)="agregarPanel($event)"
+      (cancelar)="mostrarFormPanel.set(false)"
+    ></app-form-panel>
+
+    <app-form-boton
+      *ngIf="mostrarFormBoton()"
+      (guardar)="agregarBoton($event)"
+      (cancelar)="mostrarFormBoton.set(false)"
+    ></app-form-boton>
+  </div>
+
+  <section class="dashboard__seccion">
+    <h3 class="dashboard__subtitulo">Acciones rápidas</h3>
+    <div class="dashboard__botones" *ngIf="botones().length; else sinBotones">
+      <app-boton-accion
+        *ngFor="let b of botones(); trackBy: trackById"
+        [boton]="b"
+        (ejecutar)="ejecutarBoton($event)"
+        (eliminar)="eliminarBoton($event)"
+      ></app-boton-accion>
+    </div>
+    <ng-template #sinBotones>
+      <p class="dashboard__vacio">
+        Aún no hay botones. Agregá uno con <strong>+ Botón de acción</strong>.
+      </p>
+    </ng-template>
+  </section>
+
+  <section class="dashboard__seccion">
+    <h3 class="dashboard__subtitulo">Paneles</h3>
+    <div class="dashboard__paneles" *ngIf="paneles().length; else sinPaneles">
+      <app-panel-grafana
+        *ngFor="let p of paneles(); trackBy: trackById"
+        [panel]="p"
+        [fuente]="fuente"
+        (eliminar)="eliminarPanel($event)"
+      ></app-panel-grafana>
+    </div>
+    <ng-template #sinPaneles>
+      <p class="dashboard__vacio">
+        Aún no hay paneles. Agregá uno con <strong>+ Panel Grafana</strong>.
+        Necesitás el <em>Dashboard UID</em> y el <em>Panel ID</em> desde Grafana.
+      </p>
+    </ng-template>
+  </section>
+
+  <section class="dashboard__seccion" *ngIf="historial().length">
+    <h3 class="dashboard__subtitulo">Historial de ejecuciones</h3>
+    <ul class="dashboard__historial">
+      <li *ngFor="let h of historial().slice(0, 8)" [class]="'estado--' + h.estado">
+        <span class="historial__fecha">{{ h.fecha | date:'short' }}</span>
+        <span class="historial__label">{{ h.botonLabel }}</span>
+        <span class="historial__estado">{{ h.estado }}</span>
+        <span class="historial__mensaje" *ngIf="h.mensaje">{{ h.mensaje }}</span>
+      </li>
+    </ul>
+  </section>
+</section>

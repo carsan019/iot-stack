@@ -1,0 +1,54 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h3 class="form__titulo">Agregar botón de acción</h3>
+
+  <div class="form__fila">
+    <label class="form__campo">
+      <span>Label</span>
+      <input type="text" formControlName="label" placeholder="Encender luz" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Icono</span>
+      <input type="text" formControlName="icono" placeholder="?" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Color</span>
+      <input type="color" formControlName="color" />
+    </label>
+  </div>
+
+  <label class="form__campo">
+    <span>Descripción</span>
+    <input type="text" formControlName="descripcion" placeholder="Opcional" />
+  </label>
+
+  <div class="form__fila">
+    <label class="form__campo form__campo--corto">
+      <span>Método</span>
+      <select formControlName="metodo">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+    </label>
+    <label class="form__campo">
+      <span>URL</span>
+      <input type="text" formControlName="url" placeholder="http://192.168.1.10/api/light/on" />
+    </label>
+  </div>
+
+  <label class="form__campo">
+    <span>Payload (JSON opcional)</span>
+    <textarea rows="3" formControlName="payload" placeholder='{"valor": 1}'></textarea>
+  </label>
+
+  <label class="form__check">
+    <input type="checkbox" formControlName="confirmar" />
+    <span>Pedir confirmación antes de ejecutar</span>
+  </label>
+
+  <div class="form__acciones">
+    <button type="button" class="btn btn--ghost" (click)="cancelar.emit()">Cancelar</button>
+    <button type="submit" class="btn btn--primario" [disabled]="form.invalid">Agregar botón</button>
+  </div>
+</form>

@@ -1,0 +1,52 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h3 class="form__titulo">Conexión a Grafana ({{ fuente }})</h3>
+
+  <p class="form__ayuda">
+    Pegá acá la URL completa de tu Grafana. Ejemplos:
+    <br />
+    <code>http://192.168.1.50:3000</code> · <code>https://mi-stack.grafana.net</code>
+  </p>
+
+  <label class="form__campo">
+    <span>Etiqueta</span>
+    <input type="text" formControlName="label" placeholder="Grafana de la planta" />
+  </label>
+
+  <label class="form__campo">
+    <span>Base URL</span>
+    <input
+      type="url"
+      formControlName="baseUrl"
+      placeholder="https://mi-stack.grafana.net"
+    />
+    <small class="form__error" *ngIf="form.controls.baseUrl.touched && form.controls.baseUrl.invalid">
+      Debe empezar con http:// o https://
+    </small>
+  </label>
+
+  <div class="form__fila">
+    <label class="form__campo form__campo--corto">
+      <span>Org ID</span>
+      <input type="number" formControlName="orgId" min="1" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Tema</span>
+      <select formControlName="theme">
+        <option value="dark">dark</option>
+        <option value="light">light</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="form__acciones">
+    <button type="button" class="btn btn--ghost" (click)="onRestablecer()">
+      Restablecer
+    </button>
+    <button type="button" class="btn btn--ghost" (click)="cancelar.emit()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn--primario" [disabled]="form.invalid">
+      Guardar conexión
+    </button>
+  </div>
+</form>

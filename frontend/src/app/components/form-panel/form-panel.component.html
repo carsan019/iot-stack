@@ -1,0 +1,84 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h3 class="form__titulo">Agregar panel de Grafana</h3>
+
+  <p class="form__ayuda">
+    En Grafana, abrí el panel ? menú <strong>Share</strong> ?
+    <strong>Link</strong> o <strong>Embed</strong> y pegá la URL completa acá:
+  </p>
+
+  <label class="form__campo">
+    <span>URL o iframe del panel</span>
+    <textarea
+      rows="2"
+      formControlName="urlPegada"
+      placeholder='https://mi-grafana/d/abcd1234/mi-dashboard?orgId=1&viewPanel=2&from=now-1h&to=now'
+      (paste)="onPaste($event)"
+    ></textarea>
+  </label>
+
+  <div class="form__fila">
+    <button type="button" class="btn btn--secundario" (click)="detectar()">
+      <span class="btn__icono" aria-hidden="true">??</span> Detectar
+    </button>
+    <button
+      type="button"
+      class="btn"
+      *ngIf="baseUrlPegada()"
+      (click)="usarBaseUrlPegada()"
+      title="Usar el host de la URL pegada como conexión de Grafana"
+    >
+      Usar {{ baseUrlPegada() }} como conexión
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost"
+      (click)="mostrarAvanzado.set(!mostrarAvanzado())"
+    >
+      {{ mostrarAvanzado() ? 'Ocultar' : 'Mostrar' }} campos avanzados
+    </button>
+  </div>
+
+  <p class="form__ayuda" *ngIf="mensaje()">{{ mensaje() }}</p>
+
+  <label class="form__campo">
+    <span>Título</span>
+    <input type="text" formControlName="titulo" placeholder="Temperatura sala" />
+  </label>
+
+  <div class="form__fila" *ngIf="mostrarAvanzado()">
+    <label class="form__campo">
+      <span>Dashboard UID</span>
+      <input type="text" formControlName="dashboardUid" placeholder="abcd1234" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Panel ID</span>
+      <input type="number" formControlName="panelId" min="1" />
+    </label>
+  </div>
+
+  <div class="form__fila">
+    <label class="form__campo form__campo--corto">
+      <span>From</span>
+      <input type="text" formControlName="from" placeholder="now-1h" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>To</span>
+      <input type="text" formControlName="to" placeholder="now" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Refresh</span>
+      <input type="text" formControlName="refresh" placeholder="10s" />
+    </label>
+    <label class="form__campo form__campo--corto">
+      <span>Altura (px)</span>
+      <input type="number" formControlName="altura" min="120" />
+    </label>
+  </div>
+
+  <div class="form__acciones">
+    <button type="button" class="btn btn--ghost" (click)="cancelar.emit()">Cancelar</button>
+    <button type="submit" class="btn btn--primario" [disabled]="form.invalid">
+      Agregar panel
+    </button>
+  </div>
+</form>

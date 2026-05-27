@@ -1,0 +1,18 @@
+<button
+  type="button"
+  class="boton-accion"
+  [style.background]="boton.color"
+  [disabled]="ejecutando()"
+  [title]="boton.descripcion || boton.label"
+  (click)="onEjecutar()"
+>
+  <span class="boton-accion__icono" *ngIf="boton.icono">{{ boton.icono }}</span>
+  <span class="boton-accion__label">{{ boton.label }}</span>
+  <span class="boton-accion__metodo">{{ boton.metodo }}</span>
+  <button
+    type="button"
+    class="boton-accion__cerrar"
+    (click)="onEliminar($event)"
+    aria-label="Eliminar boton"
+  >×</button>
+</button>

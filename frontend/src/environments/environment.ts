@@ -3,7 +3,7 @@ export const environment = {
   grafana: {
     local: {
       label: 'Grafana Local',
-      baseUrl: 'http://localhost:3000',
+      baseUrl: 'http://44.203.19.150:8080',
       orgId: 1,
       theme: 'dark' as 'dark' | 'light',
     },
@@ -15,6 +15,6 @@ export const environment = {
     },
   },
   acciones: {
-    endpointBase: '',
+    endpointBase: 'http://44.203.19.150:8000',
   },
 };

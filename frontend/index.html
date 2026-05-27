@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IoT Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
+
+    nav {
+      background: #1a1d2e;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #2d2f45;
+    }
+    nav span { font-weight: bold; font-size: 18px; color: #7c83f5; margin-right: auto; }
+    nav a {
+      color: #a0a3c4;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+    }
+    nav a.active, nav a:hover { background: #2d2f45; color: #fff; }
+
+    .page { display: none; padding: 24px; }
+    .page.active { display: block; }
+
+    h2 { margin-bottom: 16px; font-size: 20px; color: #fff; }
+
+    iframe {
+      width: 100%;
+      height: 70vh;
+      border: none;
+      border-radius: 8px;
+      background: #1a1d2e;
+    }
+
+    .card {
+      background: #1a1d2e;
+      border-radius: 10px;
+      padding: 24px;
+      max-width: 400px;
+    }
+    .card p { color: #a0a3c4; margin-bottom: 20px; font-size: 14px; }
+
+    .btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-on  { background: #4caf50; color: #fff; }
+    .btn-off { background: #f44336; color: #fff; }
+
+    #msg {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+    }
+    #msg.ok    { background: #1e3a1e; color: #4caf50; display: block; }
+    #msg.error { background: #3a1e1e; color: #f44336; display: block; }
+
+    .config-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+    .config-row label { width: 90px; font-size: 13px; color: #a0a3c4; }
+    .config-row input {
+      flex: 1; padding: 8px; background: #0f1117; border: 1px solid #2d2f45;
+      border-radius: 6px; color: #fff; font-size: 13px;
+    }
+    .btn-save { background: #7c83f5; color: #fff; padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span>🌐 IoT Stack</span>
+  <a onclick="show('local')" id="tab-local" class="active">Grafana Local</a>
+  <a onclick="show('cloud')" id="tab-cloud">Grafana Cloud</a>
+  <a onclick="show('led')"   id="tab-led">Control LED</a>
+</nav>
+
+<!-- GRAFANA LOCAL -->
+<div class="page active" id="page-local">
+  <h2>Grafana Local</h2>
+  <div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+    <input id="url-local" style="flex:1;padding:8px;background:#1a1d2e;border:1px solid #2d2f45;border-radius:6px;color:#fff;font-size:13px;" placeholder="URL del panel (d-solo/...)"/>
+    <button class="btn-save" onclick="cargarLocal()">Cargar</button>
+  </div>
+  <iframe id="frame-local" src=""></iframe>
+</div>
+
+<!-- GRAFANA CLOUD -->
+<div class="page" id="page-cloud">
+  <h2>Grafana Cloud</h2>
+  <div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+    <input id="url-cloud" style="flex:1;padding:8px;background:#1a1d2e;border:1px solid #2d2f45;border-radius:6px;color:#fff;font-size:13px;" placeholder="URL del panel de Grafana Cloud"/>
+    <button class="btn-save" onclick="cargarCloud()">Cargar</button>
+  </div>
+  <iframe id="frame-cloud" src=""></iframe>
+</div>
+
+<!-- CONTROL LED -->
+<div class="page" id="page-led">
+  <h2>Control LED</h2>
+  <div class="card">
+    <p>Envía un comando MQTT a la ESP32 para controlar el LED.</p>
+    <button class="btn btn-on"  onclick="led('ON')">💡 Encender</button>
+    <button class="btn btn-off" onclick="led('OFF')">🌑 Apagar</button>
+    <div id="msg"></div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://44.203.19.150:8000';
+
+  function show(tab) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  function cargarLocal() {
+    const url = document.getElementById('url-local').value.trim();
+    if (url) {
+      document.getElementById('frame-local').src = url;
+      localStorage.setItem('iot-local-url', url);
+    }
+  }
+
+  function cargarCloud() {
+    const url = document.getElementById('url-cloud').value.trim();
+    if (url) {
+      document.getElementById('frame-cloud').src = url;
+      localStorage.setItem('iot-cloud-url', url);
+    }
+  }
+
+  async function led(estado) {
+    const msg = document.getElementById('msg');
+    try {
+      const res = await fetch(API + '/led/' + estado, { method: 'POST' });
+      const data = await res.json();
+      msg.className = 'ok';
+      msg.textContent = '✅ ' + data.mensaje;
+    } catch (e) {
+      msg.className = 'error';
+      msg.textContent = '❌ Error: ' + e.message;
+    }
+  }
+
+  // Restaurar URLs guardadas
+  const lu = localStorage.getItem('iot-local-url');
+  const cu = localStorage.getItem('iot-cloud-url');
+  if (lu) { document.getElementById('url-local').value = lu; document.getElementById('frame-local').src = lu; }
+  if (cu) { document.getElementById('url-cloud').value = cu; document.getElementById('frame-cloud').src = cu; }
+</script>
+</body>
+</html>
